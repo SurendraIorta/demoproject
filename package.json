@@ -1,0 +1,27 @@
+{
+  "name": "transactiondemo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SurendraIorta/demoproject.git"
+  },
+  "author": "Surendra Waso",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SurendraIorta/demoproject/issues"
+  },
+  "homepage": "https://github.com/SurendraIorta/demoproject#readme",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "express": "^4.17.1",
+    "git": "^0.1.5",
+    "mongoose": "^5.7.0",
+    "node": "^12.10.0"
+  }
+}
