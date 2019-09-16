@@ -3,11 +3,10 @@ let ObjectID = mongoose.Types.ObjectId;
 
 var transactionModel    =   require('./model');
 var usersModel          =   require('../../users/model');
-
-let config      = require('../../../config/serverconfig');
+let config              =   require('../../../config/serverconfig');
 
 let statusOptions       =   {"Success":"Success","Failed":"Failed","Pending":"Pending"};
-let transactionTypes    =   { "Cash":"Cash" , "Cheque":"Cheque" , "Digital payment":"Digital payment"};
+let transactionTypes    =   ["Cash" , "Cheque" , "Digital payment"];
 
 
 /**
@@ -36,6 +35,8 @@ let saveTransaction     =   (req,res)=>{
             }
             else if(!allParams.transactionType){
                 reject("Transaction type value is mandatory.");
+            }else if(!transactionTypes.find(function(elem){return elem == allParams.transactionType;})){
+                reject("Transaction type value is not valid.");
             }else{
                 resolve(null);
             }
@@ -72,14 +73,19 @@ let saveTransaction     =   (req,res)=>{
             })
             .then((senderReceiverDetails)=>{
                 console.log("senderReceiverDetails out ",senderReceiverDetails)
+                /**
+                 * ToDo: Confirm if checking collection is required or not.
+                 */
                 var conn = mongoose.createConnection(config.dbDetails.url)
                 conn.on('open', async function () {
                     var collectionDetails = await conn.db.listCollections().toArray();
                     console.log("collectionDetails is array",Array.isArray(collectionDetails))
                     if(Array.isArray(collectionDetails)){
                         var today   =   new Date();
-                        var currentCollectionName   =   today.getMonth()+"-"+today.getFullYear()+"-transactions";
+                        var currentMonth    =   today.getMonth() >= 10 ? today.getMonth() +1 : "0"+(today.getMonth()+1)
+                        var currentCollectionName   =   currentMonth+"-"+today.getFullYear()+"-transactions";
                         var currentTransactionModel =   mongoose.model(currentCollectionName, transactionModel.TransactionSchema);
+                        
                         if(collectionDetails.find(function(collection){return collection.name == currentCollectionName;})){
                           //Collection exists
                            
@@ -101,7 +107,7 @@ let saveTransaction     =   (req,res)=>{
                             })
                             newTransaction.save(function(err,transactionDetails){
                                 if(!err){
-                                    res.status(200).json({status: true,message: "Insufficient balance.",data:null});
+                                    res.status(200).json({status: true,message: "Insufficient balance.",data:transactionDetails});
                                 }else{
                                     res.status(200).json({ status: false, message: "Transaction Failed", data: err });
                                 }
@@ -189,8 +195,6 @@ let testCode            =   (req,res) => {
             return testData;
     });
 }
-
-
 
 module.exports = {
     saveTransaction,
