@@ -8,7 +8,6 @@ let config              =   require('../../../config/serverconfig');
 let statusOptions       =   {"Success":"Success","Failed":"Failed","Pending":"Pending"};
 let transactionTypes    =   ["Cash" , "Cheque" , "Digital payment"];
 
-
 /**
  * Surendra Waso - 12/09/2019
  * Save the transaction details
