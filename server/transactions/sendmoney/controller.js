@@ -21,7 +21,6 @@ let transactionTypes    =   ["Cash" , "Cheque" , "Digital payment"];
 let saveTransaction     =   (req,res)=>{
 
     let allParams       =   req.body;
-    console.log("req received",allParams,req.params);
     return new Promise((resolve,reject)=>{
             if(!allParams.sender){
                reject("Sender value is mandatory.");
@@ -46,7 +45,6 @@ let saveTransaction     =   (req,res)=>{
         };
         usersModel.find(reqObj) 
         .then((userDetails)=>{
-            // console.log("userDetails ",userDetails)
             if(userDetails.length == 0){
                 res.status(200).json({
                     status: true,
@@ -59,7 +57,6 @@ let saveTransaction     =   (req,res)=>{
             }
             usersModel.find(reqObj) 
             .then((receiverDetails)=>{
-                // console.log("userDetails ",receiverDetails)
                 if(receiverDetails.length == 0){
                     res.status(200).json({
                         status: true,
@@ -71,14 +68,12 @@ let saveTransaction     =   (req,res)=>{
                 }
             })
             .then((senderReceiverDetails)=>{
-                console.log("senderReceiverDetails out ",senderReceiverDetails)
                 /**
                  * ToDo: Confirm if checking collection is required or not.
                  */
                 var conn = mongoose.createConnection(config.dbDetails.url)
                 conn.on('open', async function () {
                     var collectionDetails = await conn.db.listCollections().toArray();
-                    console.log("collectionDetails is array",Array.isArray(collectionDetails))
                     if(Array.isArray(collectionDetails)){
                         var today   =   new Date();
                         var currentMonth    =   today.getMonth() >= 10 ? today.getMonth() +1 : "0"+(today.getMonth()+1)
@@ -91,7 +86,6 @@ let saveTransaction     =   (req,res)=>{
                         }else{
                             //Collection does not exist
                         }
-                        // console.log("senderReceiverDetails in ",senderReceiverDetails)
                         if(senderReceiverDetails.sender.balance < allParams.amount){
 
                             var newTransaction  =   new currentTransactionModel({
