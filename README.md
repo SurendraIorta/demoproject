@@ -1,6 +1,6 @@
 # demoproject
 
-> IorTaWallet
+> Iorta Wallet Demo
 
 ## Build Setup
 

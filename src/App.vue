@@ -1,13 +1,21 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+     <!--router-link to="savetrans">New Transaction</router-link-->
+    <!--router-link to="showtrans">Show Transactions</router-link-->
     <router-view/>
+    <!--test-app></test-app-->
   </div>
 </template>
 
 <script>
+/* eslint-disable */ 
+import testapp from "./components/SaveTrans"
+
 export default {
-  name: 'App'
+  name: 'App',
+  components:{
+    "test-app":testapp
+  }
 }
 </script>
 

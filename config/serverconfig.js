@@ -1,6 +1,6 @@
 const serverDetails =   {
     "url"           :   "http://localhost",
-    "port"          :   5001,
+    "port"          :   5001
     
 }
 
