@@ -71,7 +71,7 @@ let saveTransaction     =   (req,res)=>{
                 /**
                  * ToDo: Confirm if checking collection is required or not.
                  */
-                var conn = mongoose.createConnection(config.dbDetails.url)
+                var conn = mongoose.createConnection(config.dbDetails.url,config.dbDetails.options)
                 conn.on('open', async function () {
                     var collectionDetails = await conn.db.listCollections().toArray();
                     if(Array.isArray(collectionDetails)){
@@ -128,7 +128,7 @@ let saveTransaction     =   (req,res)=>{
                                     .then((updateData)=>{
                                         console.log(updateData);
                                     })
-                                    res.status(200).json({ status: true, message: "Transaction Successful", data: transactionDetails });
+                                    res.status(200).json({ status: true, message: "Transaction Successful", data: transactionDetails._id });
                                 }else{
                                     res.status(200).json({ status: false, message: "Transaction Failed", data: err });
                                 }

@@ -67,25 +67,27 @@ let getTransactionDetails     =   (req,res)=>{
                 res.status(200).json({
                     status: true,
                     message: "No further transactions to show.",
-                    data:    [],
-                    lastMonthTrans:currentCollectionName.split("-")[0]+"-"+currentCollectionName.split("-")[1],
-                    lastTransCompleted:true,
-                    lastTransCount: transactionData.lastTransCount
+                    data:    {
+                        transactions        :   [],
+                        totalTransactons    :   transactionData.totalTransactons ? transactionData.totalTransactons : 0,
+                        lastTransCompleted  :   true,
+                        lastTransCount      :   transactionData.lastTransCount,
+                        lastMonthTrans      :   transactionData.lastMonthTrans
+                    },
+                    // lastMonthTrans:currentCollectionName.split("-")[0]+"-"+currentCollectionName.split("-")[1],
+                    
                 })
             }else{
-                var totalTransactons    =   transactionData.totalTransactons;
                 let transactions       =   transactionData.transactionData;
-                let lastTransCount      =   transactionData.lastTransCount;
-                let lastTransCompleted  =   transactionData.lastTransCompleted;
-
-                res.status(200).json({
-                    status: true,
-                    message: "transactions found",
-                    data:    transactions,
-                    totalTransactons:   totalTransactons,
-                    lastTransCompleted: lastTransCompleted,
-                    lastTransCount: lastTransCount,
-                    lastMonthTrans:transactionData.lastMonthTrans,
+                 res.status(200).json({
+                        status: true,
+                        message: "transactions found",
+                        data:   { transactions,
+                        totalTransactons    :   transactionData.totalTransactons,
+                        lastTransCompleted  :   transactionData.lastTransCompleted,
+                        lastTransCount      :   transactionData.lastTransCount,
+                        lastMonthTrans      :   transactionData.lastMonthTrans
+                    }
                 })
             }
         })
@@ -108,7 +110,7 @@ let getTransactionDetails     =   (req,res)=>{
 var transactionCollData =   [];
 let getTransactionHistory = async (currentCollectionName,lastTransCount)=> {
     var currentTransactionModel =   mongoose.model(currentCollectionName, transactionModel.TransactionSchema);
-    let transactions            =   await currentTransactionModel.find().skip(lastTransCount).limit(pageSize - transactionCollData.length).exec();
+    let transactions            =   await currentTransactionModel.find().skip(lastTransCount).limit(pageSize - transactionCollData.length).populate("receiver","username").exec();
     var totalTransactons        =   await currentTransactionModel.find({}).countDocuments();
     var lastTransCount          =   transactions.length+lastTransCount;
     let lastTransCompleted      =   true;
